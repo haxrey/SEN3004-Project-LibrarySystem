@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Tip Calculation Result</title>
+</head>
+<body>
+    <h1>Tip Calculation Result</h1>
+    <div>
+        <p>Receipt Amount: <span th:text="${tipData.receiptAmount}"></span></p>
+        <p>Tip Percentage: <span th:text="${tipData.tipPercentage}"></span>%</p>
+        <p>Date: <span th:text="${tipData.dateField}"></span></p>
+        <p>Selected Services:</p>
+        <ul>
+            <li th:each="service : ${tipData.checkboxSelection}" th:text="${service}"></li>
+        </ul>
+        <p>Service Rating: <span th:text="${tipData.dropDownMenu}"></span></p>
+        <!-- Assuming we want to calculate the tip and total -->
+        <p>Calculated Tip: <span th:text="${tipData.receiptAmount * (tipData.tipPercentage / 100)}"></span></p>
+        <p>Total Amount: <span th:text="${tipData.receiptAmount + (tipData.receiptAmount * (tipData.tipPercentage / 100))}"></span></p>
+    </div>
+</body>
+</html>

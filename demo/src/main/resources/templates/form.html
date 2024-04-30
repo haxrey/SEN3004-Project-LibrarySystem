@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="stylesheet" href="/css/style.css">
+    <meta charset="UTF-8">
+    <title>Tip Form</title>
+    <style>
+        .form-container {
+            display: grid;
+            grid-template-columns: 150px auto;
+            gap: 15px;
+        }
+        .error {
+            color: #ff0000;
+        }
+    </style>
+</head>
+<body>
+    <h2>Enter Tip Information</h2>
+    <form th:action="@{/send}" th:object="${formData}" method="post" class="form-container">
+        <label for="receiptAmount">Receipt Amount:</label>
+        <input type="text" id="receiptAmount" th:field="*{receiptAmount}"/>
+        <div class="error" th:if="${#fields.hasErrors('receiptAmount')}" th:errors="*{receiptAmount}"></div>
+
+        <label for="tipPercentage">Tip Percentage:</label>
+        <input type="text" id="tipPercentage" th:field="*{tipPercentage}"/>
+        <div class="error" th:if="${#fields.hasErrors('tipPercentage')}" th:errors="*{tipPercentage}"></div>
+
+        <label for="dateField">Date:</label>
+        <input type="date" id="dateField" th:field="*{dateField}" required/>
+        <div class="error" th:if="${#fields.hasErrors('dateField')}" th:errors="*{dateField}"></div>
+
+        <label for="dropDownMenu">Service Rating:</label>
+        <select id="dropDownMenu" th:field="*{dropDownMenu}" required>
+            <option value="">Choose...</option>
+            <option value="Excellent">Excellent</option>
+            <option value="Good">Good</option>
+            <option value="Average">Average</option>
+            <option value="Not Good">Not Good</option>
+        </select>
+        <div class="error" th:if="${#fields.hasErrors('dropDownMenu')}" th:errors="*{dropDownMenu}"></div>
+
+        <input type="submit" value="Submit" />
+    </form>
+</body>
+</html>

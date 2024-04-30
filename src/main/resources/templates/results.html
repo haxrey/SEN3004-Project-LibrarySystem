@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transaction Results</title>
+    <!-- Include Tailwind CSS from CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    
+</head>
+<body class="bg-gray-100">
+    <div class="container mx-auto mt-10">
+        <h1 class="text-2xl font-bold text-center mb-6">Books Records</h1>
+        <table class="min-w-full table-auto bg-white rounded-lg overflow-hidden">
+            <thead class="bg-gray-200 text-gray-600">
+                <tr>
+                    <th class="px-4 py-2">Book Title</th>
+                    <th class="px-4 py-2">Authors</th>
+                    <th class="px-4 py-2">ISBN</th>
+                    <th class="px-4 py-2">Publication Date</th>
+                    <th class="px-4 py-2"></th>
+
+                </tr>
+            </thead>
+            <tbody class="text-gray-700">
+
+                <tr>
+                    <td class="border px-4 py-2">Sample Book Title</td>
+                    <td class="border px-4 py-2">Author Name</td>
+                    <td class="border px-4 py-2">1234567890</td>
+                    <td class="border px-4 py-2">2021-07-01</td>
+                    <td class="border px-4 py-2">
+                        <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded focus:outline-none focus:shadow-outline">
+                            Edit
+                        </button>
+                    
+                    </td>
+                </tr>
+
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
