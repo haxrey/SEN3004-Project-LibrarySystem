@@ -1,7 +1,6 @@
 package com.example.demo.model;
 
 import java.util.Set;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -49,6 +48,4 @@ public class Author {
     public void setBooks(Set<Book> books) {
         this.books = books;
     }
-
-
 }

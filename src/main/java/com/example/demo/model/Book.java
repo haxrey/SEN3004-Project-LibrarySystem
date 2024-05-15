@@ -2,7 +2,6 @@ package com.example.demo.model;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
-import jakarta.annotation.Generated;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -12,45 +11,41 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Past;
-import jakarta.validation.constraints.Size;
 
-import java.lang.annotation.Inherited;
 import java.time.LocalDate;
 import java.util.Set;
 
 @Entity
 @Table(name = "books")
 public class Book {
-
- 
-   
-    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id; 
+    private Long id;
 
-    @NotEmpty
-    private String bookTitle;
+    @NotEmpty(message = "Book title is required")
+    private String title;
 
-    @NotEmpty
-    private String bookAuthor;
+    @NotEmpty(message = "ISBN is required")
+    private String isbn;
 
-    @DateTimeFormat(pattern = "dd-MM-yyyy")
-    private LocalDate dateOfPublishing;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate publicationDate;
 
-    @NotEmpty
-    private String isbn; 
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate purchaseDate;
+
+    @NotEmpty(message = "Price is required")
+    private double price;
 
     @ManyToMany
     @JoinTable(
-        name = "book_author",
+        name = "author_book",
         joinColumns = @JoinColumn(name = "book_id"),
         inverseJoinColumns = @JoinColumn(name = "author_id")
     )
     private Set<Author> authors;
 
-
+    // Getters and Setters
     public Long getId() {
         return id;
     }
@@ -59,28 +54,12 @@ public class Book {
         this.id = id;
     }
 
-    public String getBookTitle() {
-        return bookTitle;
+    public String getTitle() {
+        return title;
     }
 
-    public void setBookTitle(String bookTitle) {
-        this.bookTitle = bookTitle;
-    }
-
-    public String getBookAuthor() {
-        return bookAuthor;
-    }
-
-    public void setBookAuthor(String bookAuthor) {
-        this.bookAuthor = bookAuthor;
-    }
-
-    public LocalDate getDateOfPublishing() {
-        return dateOfPublishing;
-    }
-
-    public void setDateOfPublishing(LocalDate dateOfPublishing) {
-        this.dateOfPublishing = dateOfPublishing;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getIsbn() {
@@ -91,6 +70,35 @@ public class Book {
         this.isbn = isbn;
     }
 
+    public LocalDate getPublicationDate() {
+        return publicationDate;
+    }
 
+    public void setPublicationDate(LocalDate publicationDate) {
+        this.publicationDate = publicationDate;
+    }
 
+    public LocalDate getPurchaseDate() {
+        return purchaseDate;
+    }
+
+    public void setPurchaseDate(LocalDate purchaseDate) {
+        this.purchaseDate = purchaseDate;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public Set<Author> getAuthors() {
+        return authors;
+    }
+
+    public void setAuthors(Set<Author> authors) {
+        this.authors = authors;
+    }
 }
