@@ -1,7 +1,6 @@
 package com.example.demo.model;
 
 import org.springframework.format.annotation.DateTimeFormat;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -11,7 +10,6 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotEmpty;
-
 import java.time.LocalDate;
 import java.util.Set;
 
@@ -34,7 +32,6 @@ public class Book {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate purchaseDate;
 
-    @NotEmpty(message = "Price is required")
     private double price;
 
     @ManyToMany
@@ -44,6 +41,14 @@ public class Book {
         inverseJoinColumns = @JoinColumn(name = "author_id")
     )
     private Set<Author> authors;
+
+    @ManyToMany
+    @JoinTable(
+        name = "book_genre",
+        joinColumns = @JoinColumn(name = "book_id"),
+        inverseJoinColumns = @JoinColumn(name = "genre_id")
+    )
+    private Set<Genre> genres;
 
     // Getters and Setters
     public Long getId() {
@@ -100,5 +105,13 @@ public class Book {
 
     public void setAuthors(Set<Author> authors) {
         this.authors = authors;
+    }
+
+    public Set<Genre> getGenres() {
+        return genres;
+    }
+
+    public void setGenres(Set<Genre> genres) {
+        this.genres = genres;
     }
 }

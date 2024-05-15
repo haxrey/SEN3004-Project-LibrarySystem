@@ -6,7 +6,6 @@
     <title>Transaction Results</title>
     <!-- Include Tailwind CSS from CDN -->
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    
 </head>
 <body class="bg-gray-100">
     <div class="container mx-auto mt-10">
@@ -18,15 +17,21 @@
                     <th class="px-4 py-2">Authors</th>
                     <th class="px-4 py-2">ISBN</th>
                     <th class="px-4 py-2">Publication Date</th>
+                    <th class="px-4 py-2">Purchase Date</th>
+                    <th class="px-4 py-2">Price</th>
+                    <th class="px-4 py-2">Genres</th>
                     <th class="px-4 py-2">Actions</th>
                 </tr>
             </thead>
             <tbody th:each="book : ${books}" class="text-gray-700">
                 <tr>
-                    <td class="border px-4 py-2" th:text="${book.bookTitle}">Sample Book Title</td>
+                    <td class="border px-4 py-2" th:text="${book.title}">Sample Book Title</td>
                     <td class="border px-4 py-2" th:text="${#strings.collectionToCommaDelimitedString(book.authors.![name])}">Author Name</td>
                     <td class="border px-4 py-2" th:text="${book.isbn}">1234567890123</td>
-                    <td class="border px-4 py-2" th:text="${#dates.format(book.dateOfPublishing, 'yyyy-MM-dd')}">2021-07-01</td>
+                    <td class="border px-4 py-2" th:text="${#dates.format(book.publicationDate, 'yyyy-MM-dd')}">2021-07-01</td>
+                    <td class="border px-4 py-2" th:text="${#dates.format(book.purchaseDate, 'yyyy-MM-dd')}">2021-08-01</td>
+                    <td class="border px-4 py-2" th:text="${book.price}">19.99</td>
+                    <td class="border px-4 py-2" th:text="${#strings.collectionToCommaDelimitedString(book.genres.![name])}">Genre Names</td>
                     <td class="border px-4 py-2">
                         <a th:href="@{/edit(bookId=${book.id})}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded focus:outline-none focus:shadow-outline">Edit</a>
                         <a th:href="@{/delete(bookId=${book.id})}" class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded focus:outline-none focus:shadow-outline">Delete</a>
