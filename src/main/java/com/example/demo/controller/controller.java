@@ -26,7 +26,7 @@ import com.example.demo.services.BookService;
 import com.example.demo.services.GenreService;
 
 @Controller
-public class controller {    
+public class controller {
     @Autowired
     private BookService bookService;
 
@@ -45,12 +45,12 @@ public class controller {
 
     @PostMapping("/submit-book")
     public String submitBook(@RequestParam String title,
-                             @RequestParam List<String> authors,
-                             @RequestParam String publishDate,
-                             @RequestParam String purchaseDate,
-                             @RequestParam String isbn,
-                             @RequestParam double price,
-                             @RequestParam Set<Long> genres) {
+            @RequestParam List<String> authors,
+            @RequestParam String publishDate,
+            @RequestParam String purchaseDate,
+            @RequestParam String isbn,
+            @RequestParam double price,
+            @RequestParam Set<Long> genres) {
         Book book = new Book();
         book.setTitle(title);
         book.setIsbn(isbn);
@@ -62,7 +62,8 @@ public class controller {
         for (String authorName : authors) {
             Author author = new Author();
             author.setName(authorName);
-            authorService.saveAuthor(author); //WE HAVE TO SAVE THE AUTHOR FIRST BEFORE ADDING IT TO THE BOOK - Nour <3 :)
+            authorService.saveAuthor(author); // WE HAVE TO SAVE THE AUTHOR FIRST BEFORE ADDING IT TO THE BOOK - Nour <3
+                                              // :)
             authorSet.add(author);
         }
         book.setAuthors(authorSet);
@@ -86,4 +87,25 @@ public class controller {
         mv.addObject("books", bookService.findAllBooks());
         return mv;
     }
+
+    // @mustafa
+    @GetMapping("/edit")
+    public String showEditBookForm(@RequestParam("bookId") Long bookId, Model model) {
+        Book book = bookService.getBookById(bookId);
+        model.addAttribute("book", book);
+        return "edit";
+    }
+
+    @PostMapping("/update-book")
+    public String updateBook(@ModelAttribute("book") Book book) {
+        bookService.updateBook(book);
+        return "redirect:/results";
+    }
+
+    @GetMapping("/delete")
+    public String deleteBook(@RequestParam("bookId") Long bookId) {
+        bookService.deleteBook(bookId);
+        return "redirect:/results";
+    }
+
 }

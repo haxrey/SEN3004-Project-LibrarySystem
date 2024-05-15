@@ -18,7 +18,7 @@ public class BookService {
     private BookRep bookRepository;
     @Autowired
     private AuthorRep authorRepository;
-    
+
     public void saveBook(Book book) {
         bookRepository.save(book);
     }
@@ -38,4 +38,18 @@ public class BookService {
     public void deleteById(Long bookId) {
         bookRepository.deleteById(bookId);
     }
+
+    // @mustafa
+    public Book getBookById(Long id) {
+        return bookRepository.findById(id).orElse(null);
+    }
+
+    public void updateBook(Book book) {
+        bookRepository.save(book);
+    }
+
+    public void deleteBook(Long id) {
+        bookRepository.deleteById(id);
+    }
+
 }
