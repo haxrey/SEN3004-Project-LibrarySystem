@@ -3,13 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Transaction Results</title>
-    <!-- Include Tailwind CSS from CDN -->
+    <title>Books Records</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
 <body class="bg-gray-100">
     <div class="container mx-auto mt-10">
-        <h1 class="text-2xl font-bold text-center mb-6">Books Records</h1>
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="text-2xl font-bold">Books Records</h1>
+            <a href="/form" class="flex items-center bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l-2-2m2 2h8m-6 2a9 9 0 11-6-15.659M10 14l6-6m0 0l-6-6M10 2h4"></path>
+                </svg>
+                Add Books
+            </a>
+        </div>
         <table class="min-w-full table-auto bg-white rounded-lg overflow-hidden">
             <thead class="bg-gray-200 text-gray-600">
                 <tr>
@@ -26,12 +33,20 @@
             <tbody th:each="book : ${books}" class="text-gray-700">
                 <tr>
                     <td class="border px-4 py-2" th:text="${book.title}">Sample Book Title</td>
-                    <td class="border px-4 py-2" th:text="${#strings.collectionToCommaDelimitedString(book.authors.![name])}">Author Name</td>
+                    <td class="border px-4 py-2">
+                        <ul>
+                            <li th:each="author : ${book.authors}" th:text="${author.name}"></li>
+                        </ul>
+                    </td>
                     <td class="border px-4 py-2" th:text="${book.isbn}">1234567890123</td>
-                    <td class="border px-4 py-2" th:text="${#dates.format(book.publicationDate, 'yyyy-MM-dd')}">2021-07-01</td>
-                    <td class="border px-4 py-2" th:text="${#dates.format(book.purchaseDate, 'yyyy-MM-dd')}">2021-08-01</td>
-                    <td class="border px-4 py-2" th:text="${book.price}">19.99</td>
-                    <td class="border px-4 py-2" th:text="${#strings.collectionToCommaDelimitedString(book.genres.![name])}">Genre Names</td>
+                    <td class="border px-4 py-2" th:text="${#temporals.format(book.publicationDate, 'yyyy-MM-dd')}">2021-07-01</td>
+                    <td class="border px-4 py-2" th:text="${#temporals.format(book.purchaseDate, 'yyyy-MM-dd')}">2024-05-15</td>
+                    <td class="border px-4 py-2" th:text="${book.price}">20.00</td>
+                    <td class="border px-4 py-2">
+                        <ul>
+                            <li th:each="genre : ${book.genres}" th:text="${genre.name}"></li>
+                        </ul>
+                    </td>
                     <td class="border px-4 py-2">
                         <a th:href="@{/edit(bookId=${book.id})}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded focus:outline-none focus:shadow-outline">Edit</a>
                         <a th:href="@{/delete(bookId=${book.id})}" class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded focus:outline-none focus:shadow-outline">Delete</a>

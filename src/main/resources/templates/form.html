@@ -14,12 +14,20 @@
 </head>
 <body class="wavy-background bg-gray-100 flex items-center justify-center h-screen">
 <div class="w-full max-w-md p-5 mx-auto bg-white rounded-lg shadow-xl mt-16">
-    <div class="absolute top-5 left-5">
-        <select class="bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
-            <option value="en">English</option>
-            <option value="ar">Arabic</option>
-            <option value="tr">Turkish</option>
-        </select>
+    <div class="flex justify-between items-center mb-6">
+        <div class="relative">
+            <select class="bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                <option value="en">English</option>
+                <option value="ar">Arabic</option>
+                <option value="tr">Turkish</option>
+            </select>
+        </div>
+        <a href="/results" class="flex items-center bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l-2-2m2 2h8m-6 2a9 9 0 11-6-15.659M10 14l6-6m0 0l-6-6M10 2h4"></path>
+            </svg>
+            View Library
+        </a>
     </div>
     <h1 class="text-lg font-bold text-center mb-4">Add New Book</h1>
     <form action="/submit-book" method="POST" class="space-y-4">
@@ -28,11 +36,14 @@
             <input type="text" id="title" name="title" required
                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
         </div>
-        <div>
-            <label for="author" class="block text-sm font-medium text-gray-700">Author:</label>
-            <input type="text" id="author" name="author" required
+        <div id="author-section">
+            <label for="author-0" class="block text-sm font-medium text-gray-700">Author:</label>
+            <input type="text" id="author-0" name="authors" required
                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
         </div>
+        <button type="button" id="add-author-button" class="mt-2 bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-2 rounded focus:outline-none focus:shadow-outline">
+            Add Another Author
+        </button>
         <div>
             <label for="publishDate" class="block text-sm font-medium text-gray-700">Publish Date:</label>
             <input type="date" id="publishDate" name="publishDate" required
@@ -66,5 +77,19 @@
         </button>
     </form>
 </div>
+<script>
+    let authorIndex = 1;
+    document.getElementById("add-author-button").addEventListener("click", function() {
+        const authorSection = document.getElementById("author-section");
+        const newAuthorInput = document.createElement("input");
+        newAuthorInput.type = "text";
+        newAuthorInput.id = `author-${authorIndex}`;
+        newAuthorInput.name = "authors";
+        newAuthorInput.required = true;
+        newAuthorInput.className = "mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500";
+        authorSection.appendChild(newAuthorInput);
+        authorIndex++;
+    });
+</script>
 </body>
 </html>

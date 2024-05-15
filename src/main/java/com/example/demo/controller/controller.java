@@ -4,10 +4,12 @@ import jakarta.validation.Valid;
 
 import java.time.LocalDate;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -24,44 +26,46 @@ import com.example.demo.services.BookService;
 import com.example.demo.services.GenreService;
 
 @Controller
-public class controller { 
+public class controller {    
     @Autowired
     private BookService bookService;
 
     @Autowired
-    private AuthorService authorService;
-
-    @Autowired
     private GenreService genreService;
 
-    @GetMapping("/form.html")
+    @Autowired
+    private AuthorService authorService;
+
+    @GetMapping("/form")
     public ModelAndView displayForm() {
         ModelAndView mv = new ModelAndView("form");
-        mv.addObject("book", new Book());
         mv.addObject("genres", genreService.findAll());
         return mv;
     }
 
     @PostMapping("/submit-book")
-    public ModelAndView submitBook(@Valid @ModelAttribute Book book, BindingResult result, 
-                                   @RequestParam String author, @RequestParam String publishDate, 
-                                   @RequestParam String purchaseDate, @RequestParam Set<Long> genres) {
-        ModelAndView mv = new ModelAndView();
-
-        if (result.hasErrors()) {
-            mv.setViewName("form");
-            mv.addObject("genres", genreService.findAll());
-            return mv;
-        }
-
-
-        Author bookAuthor = new Author();
-        bookAuthor.setName(author);
-        authorService.saveAuthor(bookAuthor);
-        book.setAuthors(Set.of(bookAuthor));
-
+    public String submitBook(@RequestParam String title,
+                             @RequestParam List<String> authors,
+                             @RequestParam String publishDate,
+                             @RequestParam String purchaseDate,
+                             @RequestParam String isbn,
+                             @RequestParam double price,
+                             @RequestParam Set<Long> genres) {
+        Book book = new Book();
+        book.setTitle(title);
+        book.setIsbn(isbn);
         book.setPublicationDate(LocalDate.parse(publishDate));
         book.setPurchaseDate(LocalDate.parse(purchaseDate));
+        book.setPrice(price);
+
+        Set<Author> authorSet = new HashSet<>();
+        for (String authorName : authors) {
+            Author author = new Author();
+            author.setName(authorName);
+            authorService.saveAuthor(author); //WE HAVE TO SAVE THE AUTHOR FIRST BEFORE ADDING IT TO THE BOOK - Nour <3 :)
+            authorSet.add(author);
+        }
+        book.setAuthors(authorSet);
 
         Set<Genre> genreSet = new HashSet<>();
         for (Long genreId : genres) {
@@ -73,25 +77,13 @@ public class controller {
         book.setGenres(genreSet);
 
         bookService.saveBook(book);
-
-        mv.setViewName("results");
-        mv.addObject("books", bookService.findAll());
-        return mv;
+        return "redirect:/results";
     }
 
-    //i think the error is here
-    @GetMapping("/books")
-    public ModelAndView listBooks() {
+    @GetMapping("/results")
+    public ModelAndView displayResults() {
         ModelAndView mv = new ModelAndView("results");
-        mv.addObject("books", bookService.findAll());
-        return mv;
-    }
-
-    @GetMapping("/delete/{id}")
-    public ModelAndView deleteBook(@PathVariable long id) {
-        bookService.delete(id);
-        ModelAndView mv = new ModelAndView("results");
-        mv.addObject("books", bookService.findAll());
+        mv.addObject("books", bookService.findAllBooks());
         return mv;
     }
 }
