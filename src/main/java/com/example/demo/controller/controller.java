@@ -8,12 +8,11 @@ import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
@@ -62,8 +61,7 @@ public class controller {
         for (String authorName : authors) {
             Author author = new Author();
             author.setName(authorName);
-            authorService.saveAuthor(author); // WE HAVE TO SAVE THE AUTHOR FIRST BEFORE ADDING IT TO THE BOOK - Nour <3
-                                              // :)
+            authorService.saveAuthor(author);
             authorSet.add(author);
         }
         book.setAuthors(authorSet);
@@ -88,17 +86,56 @@ public class controller {
         return mv;
     }
 
-    // @mustafa
     @GetMapping("/edit")
     public String showEditBookForm(@RequestParam("bookId") Long bookId, Model model) {
         Book book = bookService.getBookById(bookId);
         model.addAttribute("book", book);
+        model.addAttribute("genres", genreService.findAll());
         return "edit";
     }
 
-    @PostMapping("/update-book")
-    public String updateBook(@ModelAttribute("book") Book book) {
-        bookService.updateBook(book);
+    @PostMapping("/update-book-details")
+    public String updateBookDetails(@RequestParam("bookId") Long bookId,
+            @RequestParam("title") String title,
+            @RequestParam("authors") List<String> authors,
+            @RequestParam("publishDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate publishDate,
+            @RequestParam("purchaseDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate purchaseDate,
+            @RequestParam("isbn") String isbn,
+            @RequestParam("price") Double price,
+            @RequestParam("genres") List<Long> genreIds) {
+
+        Book book = bookService.getBookById(bookId);
+        if (book != null) {
+            book.setTitle(title);
+            book.setPublicationDate(publishDate);
+            book.setPurchaseDate(purchaseDate);
+            book.setIsbn(isbn);
+            book.setPrice(price);
+
+            // Update authors
+            Set<Author> authorSet = new HashSet<>();
+            for (String authorName : authors) {
+                Author author = authorService.findByName(authorName);
+                if (author == null) {
+                    author = new Author();
+                    author.setName(authorName);
+                    authorService.save(author);
+                }
+                authorSet.add(author);
+            }
+            book.setAuthors(authorSet);
+
+            // Update genres
+            Set<Genre> genreSet = new HashSet<>();
+            for (Long genreId : genreIds) {
+                Genre genre = genreService.getGenreById(genreId);
+                genreSet.add(genre);
+            }
+            book.setGenres(genreSet);
+
+            bookService.updateBook(book);
+        }
+
         return "redirect:/results";
     }
 
@@ -107,5 +144,4 @@ public class controller {
         bookService.deleteBook(bookId);
         return "redirect:/results";
     }
-
 }

@@ -20,4 +20,9 @@ public class GenreService {
     public Genre findById(Long id) {
         return genreRepository.findById(id).orElse(null);
     }
+
+    public Genre getGenreById(Long id) {
+        return genreRepository.findById(id).orElse(null);
+    }
+
 }
