@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Book</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        .wavy-background {
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%"><path fill="%23007BFF" fill-opacity="0.1" d="M0 0c0 0 216 214 432 214s432-214 432-214 216 214 432 214 432-214 432-214v768H0z"/></svg>');
+            background-size: cover;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 p-8 wavy-background ">
+    <div class="w-full max-w-md p-5 mx-auto bg-white rounded-lg shadow-xl mt-16">
+        <h1 class="text-lg font-bold text-center mb-4">View Book</h1>
+        <div class="space-y-4">
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Title:</label>
+                <p class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm" th:text="${book.title}"></p>
+            </div>
+            <div id="author-section">
+                <label class="block text-sm font-medium text-gray-700">Authors:</label>
+                <ul>
+                    <li th:each="author : ${book.authors}" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm" th:text="${author.name}"></li>
+                </ul>
+            </div>
+            <div class="flex space-x-4">
+                <div class="flex-1">
+                    <label class="block text-sm font-medium text-gray-700">Publish Date:</label>
+                    <p class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm" th:text="${#temporals.format(book.publicationDate, 'yyyy-MM-dd')}"></p>
+                </div>
+                <div class="flex-1">
+                    <label class="block text-sm font-medium text-gray-700">Purchase Date:</label>
+                    <p class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm" th:text="${#temporals.format(book.purchaseDate, 'yyyy-MM-dd')}"></p>
+                </div>
+            </div>
+            <div class="flex space-x-4">
+                <div class="flex-1">
+                    <label class="block text-sm font-medium text-gray-700">ISBN:</label>
+                    <p class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm" th:text="${book.isbn}"></p>
+                </div>
+                <div class="flex-1">
+                    <label class="block text-sm font-medium text-gray-700">Price:</label>
+                    <p class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm" th:text="${book.price}"></p>
+                </div>
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Genres:</label>
+                <ul>
+                    <li th:each="genre : ${book.genres}" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm" th:text="${genre.name}"></li>
+                </ul>
+            </div>
+        </div>
+        <div class="text-center mt-4 space-x-2">
+            <a href="/results" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Back to Results</a>
+            <a href="/form" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Add Book</a>
+        </div>
+    </div>
+</body>
+</html>

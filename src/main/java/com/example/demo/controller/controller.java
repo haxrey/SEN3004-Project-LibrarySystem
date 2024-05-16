@@ -94,6 +94,13 @@ public class controller {
         return "edit";
     }
 
+    @GetMapping("/view")
+    public String showViewBookForm(@RequestParam("bookId") Long bookId, Model model) {
+        Book book = bookService.getBookById(bookId);
+        model.addAttribute("book", book);
+        return "view";
+    }
+
     @PostMapping("/update-book-details")
     public String updateBookDetails(@RequestParam("bookId") Long bookId,
             @RequestParam("title") String title,
