@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<!-- correser tone -->
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
   <head>
     <meta charset="UTF-8" />
@@ -27,6 +26,13 @@
       }
       body.rtl {
         direction: rtl;
+      }
+      .hidden-template {
+        display: none;
+      }
+      .author-input {
+        display: flex;
+        align-items: center;
       }
     </style>
   </head>
@@ -67,27 +73,6 @@
             </option>
           </select>
         </div>
-        <!-- <a
-          href="/results"
-          class="flex items-center bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-        >
-          <svg
-            class="w-4 h-4 mr-2"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M10 14l2-2m0 0l-2-2m2 2h8m-6 2a9 9 0 11-6-15.659M10 14l6-6m0 0l-6-6M10 2h4"
-            ></path>
-          </svg>
-          <span th:text="#{form.link.viewLibrary}">View Library</span>
-        </a> -->
-
         <a
           th:href="@{/results(lang=${#locale.language})}"
           class="flex items-center bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
@@ -132,22 +117,25 @@
           <label
             for="author-0"
             class="block text-sm font-medium text-gray-700"
-            th:text="#{form.label.author}"
-            >Author:</label
+            th:text="#{form.label.authors}"
+            >Authors:</label
           >
-          <input
-            type="text"
-            id="author-0"
-            name="authors"
-            required
-            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-          />
+          <div class="author-input">
+            <input
+              type="text"
+              id="author-0"
+              name="authors"
+              required
+              class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+            />
+          </div>
         </div>
         <div class="center-button">
           <button
             type="button"
             id="add-author-button"
             class="mt-2 bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-2 rounded focus:outline-none focus:shadow-outline"
+            data-delete-text="#{form.label.deleteAuthor}"
           >
             <span th:text="#{form.label.addAuthor}">Add Another Author</span>
           </button>
@@ -244,9 +232,26 @@
           type="submit"
           class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
         >
-          <span th:text="#{form.button.submit}">Add Book</span>
+          <span th:text="#{button.addBook}">Add Book</span>
         </button>
       </form>
+      <!-- Hidden template for new author input -->
+      <div id="author-template" class="hidden-template">
+        <div class="author-input">
+          <input
+            type="text"
+            name="authors"
+            required
+            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+          />
+          <button
+            type="button"
+            class="delete-author-button bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded focus:outline-none focus:shadow-outline ml-2"
+          >
+            <span th:text="#{form.label.deleteAuthor}">Delete</span>
+          </button>
+        </div>
+      </div>
     </div>
     <script>
       function changeLanguage(lang) {
@@ -260,6 +265,35 @@
         .addEventListener("change", function () {
           const selectedLang = this.value;
           document.body.classList.toggle("rtl", selectedLang === "ar");
+        });
+
+      let authorIndex = 1;
+      document
+        .getElementById("add-author-button")
+        .addEventListener("click", function () {
+          const authorSection = document.getElementById("author-section");
+          const authorTemplate = document.getElementById("author-template");
+          const newAuthorDiv = authorTemplate.cloneNode(true);
+          newAuthorDiv.id = "";
+          newAuthorDiv.style.display = "flex";
+
+          // Get the translated text from the button's data attribute
+          const deleteButtonText = this.getAttribute("data-delete-text");
+          newAuthorDiv.querySelector(".delete-author-button span").textContent =
+            deleteButtonText;
+
+          newAuthorDiv.querySelector(
+            'input[name="authors"]'
+          ).id = `author-${authorIndex}`;
+          authorIndex++;
+
+          newAuthorDiv
+            .querySelector(".delete-author-button")
+            .addEventListener("click", function () {
+              newAuthorDiv.remove();
+            });
+
+          authorSection.appendChild(newAuthorDiv);
         });
     </script>
   </body>
