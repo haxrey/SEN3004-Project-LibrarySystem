@@ -69,7 +69,10 @@
             th:text="#{form.label.authors}"
             >Authors:</label
           >
-          <div th:each="author, iterStat : ${book.authors}">
+          <div
+            th:each="author, iterStat : ${book.authors}"
+            class="author-input"
+          >
             <input
               type="text"
               id="author-[[${iterStat.index}]]"
@@ -78,6 +81,14 @@
               required
               class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
             />
+            <input type="hidden" name="authorIds" th:value="${author.id}" />
+            <button
+              type="button"
+              class="delete-author-button bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded focus:outline-none focus:shadow-outline ml-2"
+              th:text="#{form.label.deleteAuthor}"
+            >
+              Delete
+            </button>
           </div>
         </div>
         <button
@@ -190,30 +201,73 @@
       </form>
     </div>
     <script>
-      document
-        .getElementById("add-author-button")
-        .addEventListener("click", function () {
-          const authorSection = document.getElementById("author-section");
-          const newAuthorInput = document.createElement("input");
-          newAuthorInput.type = "text";
-          newAuthorInput.name = "authors";
-          newAuthorInput.required = true;
-          newAuthorInput.classList.add(
-            "mt-1",
-            "block",
-            "w-full",
-            "px-3",
-            "py-2",
-            "border",
-            "border-gray-300",
-            "rounded-md",
-            "shadow-sm",
-            "focus:outline-none",
-            "focus:ring-indigo-500",
-            "focus:border-indigo-500"
+      document.addEventListener("DOMContentLoaded", function () {
+        const authorSection = document.getElementById("author-section");
+        const addAuthorButton = document.getElementById("add-author-button");
+
+        function updateDeleteButtons() {
+          const authorInputs =
+            authorSection.getElementsByClassName("author-input");
+          const deleteButtons = authorSection.getElementsByClassName(
+            "delete-author-button"
           );
-          authorSection.appendChild(newAuthorInput);
+          for (let i = 0; i < deleteButtons.length; i++) {
+            deleteButtons[i].style.display =
+              authorInputs.length > 1 ? "inline-block" : "none";
+          }
+        }
+
+        addAuthorButton.addEventListener("click", function () {
+          const newAuthorDiv = document.createElement("div");
+          newAuthorDiv.className = "author-input";
+
+          const authorCount =
+            authorSection.getElementsByClassName("author-input").length;
+
+          newAuthorDiv.innerHTML = `
+            <input
+              type="text"
+              id="author-${authorCount}"
+              name="authors"
+              required
+              class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+            />
+            <button
+              type="button"
+              class="delete-author-button bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded focus:outline-none focus:shadow-outline ml-2"
+              th:text="#{form.label.deleteAuthor}"
+            >
+              Delete
+            </button>
+          `;
+
+          authorSection.appendChild(newAuthorDiv);
+
+          const deleteButtons = authorSection.getElementsByClassName(
+            "delete-author-button"
+          );
+          for (let i = 0; i < deleteButtons.length; i++) {
+            deleteButtons[i].addEventListener("click", function () {
+              this.parentNode.remove();
+              updateDeleteButtons();
+            });
+          }
+
+          updateDeleteButtons();
         });
+
+        const initialDeleteButtons = authorSection.getElementsByClassName(
+          "delete-author-button"
+        );
+        for (let i = 0; i < initialDeleteButtons.length; i++) {
+          initialDeleteButtons[i].addEventListener("click", function () {
+            this.parentNode.remove();
+            updateDeleteButtons();
+          });
+        }
+
+        updateDeleteButtons();
+      });
     </script>
   </body>
 </html>
