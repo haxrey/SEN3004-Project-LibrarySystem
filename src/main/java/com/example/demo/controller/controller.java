@@ -121,7 +121,6 @@ public class controller {
             book.setIsbn(isbn);
             book.setPrice(price);
 
-            // Update authors
             Set<Author> authorSet = new HashSet<>();
             for (String authorName : authors) {
                 Author author = authorService.findByName(authorName);
@@ -134,7 +133,6 @@ public class controller {
             }
             book.setAuthors(authorSet);
 
-            // Update genres
             Set<Genre> genreSet = new HashSet<>();
             for (Long genreId : genreIds) {
                 Genre genre = genreService.getGenreById(genreId);

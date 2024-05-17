@@ -42,7 +42,6 @@ public class Book {
     @JoinTable(name = "book_genre", joinColumns = @JoinColumn(name = "book_id"), inverseJoinColumns = @JoinColumn(name = "genre_id"))
     private Set<Genre> genres;
 
-    // Getters and Setters
     public Long getId() {
         return id;
     }

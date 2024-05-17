@@ -1,4 +1,4 @@
--- src/main/resources/sql/schema.sql
+
 
 CREATE TABLE IF NOT EXISTS authors (
     id INT AUTO_INCREMENT PRIMARY KEY,
