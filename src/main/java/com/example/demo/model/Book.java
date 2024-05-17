@@ -34,6 +34,8 @@ public class Book {
 
     private double price;
 
+    // The necessary mappings for the relationshup between Book and Author and Book
+    // and Genre:
     @ManyToMany
     @JoinTable(name = "author_book", joinColumns = @JoinColumn(name = "book_id"), inverseJoinColumns = @JoinColumn(name = "author_id"))
     private Set<Author> authors;
@@ -90,6 +92,7 @@ public class Book {
         this.price = price;
     }
 
+    // setters and getters of the authors and genres for the mappings part :)
     public Set<Author> getAuthors() {
         return authors;
     }

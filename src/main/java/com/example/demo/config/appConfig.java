@@ -20,18 +20,6 @@ import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 @Configuration
 public class appConfig implements WebMvcConfigurer {
 
-	// here I literally copied Tamer Hoca's code from the app8 one
-	// @Bean
-	// public LocaleResolver localeResolver() {
-	// return new SessionLocaleResolver(); // new AcceptHeaderLocaleResolver();
-	// }
-
-	// @Override
-	// public void addInterceptors(InterceptorRegistry registry) {
-	// LocaleChangeInterceptor interceptor = new LocaleChangeInterceptor();
-	// interceptor.setParamName("language");
-	// registry.addInterceptor(interceptor);
-	// }
 
 	@Bean
 	public MessageSource messageSource() {
