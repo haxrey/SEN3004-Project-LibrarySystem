@@ -27,12 +27,18 @@
       body.rtl {
         direction: rtl;
       }
-      .hidden-template {
-        display: none;
-      }
-      .author-input {
+      .author-group {
         display: flex;
         align-items: center;
+        gap: 1rem;
+      }
+      .remove-author-button {
+        background-color: red;
+        color: white;
+        font-weight: bold;
+        padding: 0.25rem 0.5rem;
+        border-radius: 0.25rem;
+        cursor: pointer;
       }
     </style>
   </head>
@@ -114,13 +120,7 @@
           />
         </div>
         <div id="author-section">
-          <label
-            for="author-0"
-            class="block text-sm font-medium text-gray-700"
-            th:text="#{form.label.authors}"
-            >Authors:</label
-          >
-          <div class="author-input">
+          <div class="author-group">
             <input
               type="text"
               id="author-0"
@@ -135,7 +135,6 @@
             type="button"
             id="add-author-button"
             class="mt-2 bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-2 rounded focus:outline-none focus:shadow-outline"
-            data-delete-text="#{form.label.deleteAuthor}"
           >
             <span th:text="#{form.label.addAuthor}">Add Another Author</span>
           </button>
@@ -232,26 +231,9 @@
           type="submit"
           class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
         >
-          <span th:text="#{button.addBook}">Add Book</span>
+          <span th:text="#{form.button.submitAdd}">Add Book</span>
         </button>
       </form>
-      <!-- Hidden template for new author input -->
-      <div id="author-template" class="hidden-template">
-        <div class="author-input">
-          <input
-            type="text"
-            name="authors"
-            required
-            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-          />
-          <button
-            type="button"
-            class="delete-author-button bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded focus:outline-none focus:shadow-outline ml-2"
-          >
-            <span th:text="#{form.label.deleteAuthor}">Delete</span>
-          </button>
-        </div>
-      </div>
     </div>
     <script>
       function changeLanguage(lang) {
@@ -272,29 +254,43 @@
         .getElementById("add-author-button")
         .addEventListener("click", function () {
           const authorSection = document.getElementById("author-section");
-          const authorTemplate = document.getElementById("author-template");
-          const newAuthorDiv = authorTemplate.cloneNode(true);
-          newAuthorDiv.id = "";
-          newAuthorDiv.style.display = "flex";
-
-          // Get the translated text from the button's data attribute
-          const deleteButtonText = this.getAttribute("data-delete-text");
-          newAuthorDiv.querySelector(".delete-author-button span").textContent =
-            deleteButtonText;
-
-          newAuthorDiv.querySelector(
-            'input[name="authors"]'
-          ).id = `author-${authorIndex}`;
+          const authorGroup = document.createElement("div");
+          authorGroup.className = "author-group";
+          const newAuthorInput = document.createElement("input");
+          newAuthorInput.type = "text";
+          newAuthorInput.id = `author-${authorIndex}`;
+          newAuthorInput.name = "authors";
+          newAuthorInput.required = true;
+          newAuthorInput.className =
+            "mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500";
+          const removeButton = document.createElement("button");
+          removeButton.type = "button";
+          removeButton.className = "remove-author-button";
+          removeButton.innerText = "X";
+          removeButton.onclick = function () {
+            authorGroup.remove();
+            toggleRemoveButtons();
+          };
+          authorGroup.appendChild(newAuthorInput);
+          authorGroup.appendChild(removeButton);
+          authorSection.appendChild(authorGroup);
           authorIndex++;
-
-          newAuthorDiv
-            .querySelector(".delete-author-button")
-            .addEventListener("click", function () {
-              newAuthorDiv.remove();
-            });
-
-          authorSection.appendChild(newAuthorDiv);
+          toggleRemoveButtons();
         });
+
+      function toggleRemoveButtons() {
+        const authorGroups = document.querySelectorAll(".author-group");
+        const removeButtons = document.querySelectorAll(
+          ".remove-author-button"
+        );
+        if (authorGroups.length > 1) {
+          removeButtons.forEach((button) => (button.style.display = "block"));
+        } else {
+          removeButtons.forEach((button) => (button.style.display = "none"));
+        }
+      }
+
+      toggleRemoveButtons();
     </script>
   </body>
 </html>
