@@ -1,101 +1,219 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
+  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Edit Book</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+    <title th:text="#{edit.book}">Edit Book</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
     <style>
-        .wavy-background {
-            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%"><path fill="%23007BFF" fill-opacity="0.1" d="M0 0c0 0 216 214 432 214s432-214 432-214 216 214 432 214 432-214 432-214v768H0z"/></svg>');
-            background-size: cover;
-        }
-        .checkbox-container {
-            display: flex;
-            flex-wrap: wrap;
-        }
-        .checkbox-container label {
-            width: calc(50% - 10px); /* Two columns layout with space in between */
-            margin-right: 10px;
-            margin-bottom: 10px;
-        }
+      .wavy-background {
+        background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%"><path fill="%23007BFF" fill-opacity="0.1" d="M0 0c0 0 216 214 432 214s432-214 432-214 216 214 432 214 432-214 432-214v768H0z"/></svg>');
+        background-size: cover;
+      }
+      .checkbox-container {
+        display: flex;
+        flex-wrap: wrap;
+      }
+      .checkbox-container label {
+        width: calc(50% - 10px); /* Two columns layout with space in between */
+        margin-right: 10px;
+        margin-bottom: 10px;
+      }
+      body.rtl {
+        direction: rtl;
+      }
+      .flex-container {
+        display: flex;
+        gap: 1rem; /* Add gap for consistent spacing */
+      }
+      .full-width {
+        flex: 1;
+      }
     </style>
-</head>
-<body class="p-8 wavy-background">
-    <div class="w-full max-w-md p-5 mx-auto bg-white rounded-lg shadow-xl mt-16">
-        <h1 class="text-lg font-bold text-center mb-4">Edit Book</h1>
-        <form action="/update-book-details" method="POST" class="space-y-4">
-            <input type="hidden" name="bookId" th:value="${book.id}" />
-            <div>
-                <label for="title" class="block text-sm font-medium text-gray-700">Title:</label>
-                <input type="text" id="title" name="title" th:value="${book.title}" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" />
+  </head>
+  <body
+    class="p-8 wavy-background"
+    th:classappend="${#locale.language == 'ar'} ? 'rtl' : ''"
+  >
+    <div
+      class="w-full max-w-md p-5 mx-auto bg-white rounded-lg shadow-xl mt-16"
+    >
+      <h1 class="text-lg font-bold text-center mb-4" th:text="#{edit.book}">
+        Edit Book
+      </h1>
+      <form action="/update-book-details" method="POST" class="space-y-4">
+        <input type="hidden" name="bookId" th:value="${book.id}" />
+        <div>
+          <label
+            for="title"
+            class="block text-sm font-medium text-gray-700"
+            th:text="#{form.label.title}"
+            >Title:</label
+          >
+          <input
+            type="text"
+            id="title"
+            name="title"
+            th:value="${book.title}"
+            required
+            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+          />
+        </div>
+        <div id="author-section">
+          <label
+            for="author-0"
+            class="block text-sm font-medium text-gray-700"
+            th:text="#{form.label.authors}"
+            >Authors:</label
+          >
+          <div th:each="author, iterStat : ${book.authors}">
+            <input
+              type="text"
+              id="author-[[${iterStat.index}]]"
+              name="authors"
+              th:value="${author.name}"
+              required
+              class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+            />
+          </div>
+        </div>
+        <button
+          type="button"
+          id="add-author-button"
+          class="mt-2 bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-2 rounded focus:outline-none focus:shadow-outline"
+          th:text="#{form.label.addAuthor}"
+        >
+          Add Another Author
+        </button>
+        <div class="flex-container">
+          <div class="full-width">
+            <label
+              for="publishDate"
+              class="block text-sm font-medium text-gray-700"
+              th:text="#{form.label.publishDate}"
+              >Publish Date:</label
+            >
+            <input
+              type="date"
+              id="publishDate"
+              name="publishDate"
+              th:value="${book.publicationDate}"
+              required
+              class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+            />
+          </div>
+          <div class="full-width">
+            <label
+              for="purchaseDate"
+              class="block text-sm font-medium text-gray-700"
+              th:text="#{form.label.purchaseDate}"
+              >Purchase Date:</label
+            >
+            <input
+              type="date"
+              id="purchaseDate"
+              name="purchaseDate"
+              th:value="${book.purchaseDate}"
+              required
+              class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+            />
+          </div>
+        </div>
+        <div class="flex-container">
+          <div class="full-width">
+            <label
+              for="isbn"
+              class="block text-sm font-medium text-gray-700"
+              th:text="#{form.label.isbn}"
+              >ISBN:</label
+            >
+            <input
+              type="text"
+              id="isbn"
+              name="isbn"
+              th:value="${book.isbn}"
+              required
+              class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+            />
+          </div>
+          <div class="full-width">
+            <label
+              for="price"
+              class="block text-sm font-medium text-gray-700"
+              th:text="#{form.label.price}"
+              >Price:</label
+            >
+            <input
+              type="number"
+              step="0.01"
+              id="price"
+              name="price"
+              th:value="${book.price}"
+              required
+              class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+            />
+          </div>
+        </div>
+        <div>
+          <label
+            for="genres"
+            class="block text-sm font-medium text-gray-700"
+            th:text="#{form.label.genres}"
+            >Genres:</label
+          >
+          <div class="checkbox-container">
+            <div th:each="genre : ${genres}">
+              <label>
+                <input
+                  type="checkbox"
+                  name="genres"
+                  th:value="${genre.id}"
+                  th:checked="${book.genres.contains(genre)}"
+                />
+                <span th:text="${genre.name}">Genre Name</span>
+              </label>
             </div>
-            <div id="author-section">
-                <label for="author-0" class="block text-sm font-medium text-gray-700">Authors:</label>
-                <div th:each="author, iterStat : ${book.authors}">
-                    <input type="text" id="author-[[${iterStat.index}]]" name="authors" th:value="${author.name}" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" />
-                </div>
-            </div>
-            <button type="button" id="add-author-button" class="mt-2 bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-2 rounded focus:outline-none focus:shadow-outline">Add Another Author</button>
-            <div class="flex space-x-4">
-                <div class="flex-1">
-                    <label for="publishDate" class="block text-sm font-medium text-gray-700">Publish Date:</label>
-                    <input type="date" id="publishDate" name="publishDate" th:value="${book.publicationDate}" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" />
-                </div>
-                <div class="flex-1">
-                    <label for="purchaseDate" class="block text-sm font-medium text-gray-700">Purchase Date:</label>
-                    <input type="date" id="purchaseDate" name="purchaseDate" th:value="${book.purchaseDate}" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" />
-                </div>
-            </div>
-            <div class="flex space-x-4">
-                <div class="flex-1">
-                    <label for="isbn" class="block text-sm font-medium text-gray-700">ISBN:</label>
-                    <input type="text" id="isbn" name="isbn" th:value="${book.isbn}" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" />
-                </div>
-                <div class="flex-1">
-                    <label for="price" class="block text-sm font-medium text-gray-700">Price:</label>
-                    <input type="number" step="0.01" id="price" name="price" th:value="${book.price}" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" />
-                </div>
-            </div>
-            <div>
-                <label for="genres" class="block text-sm font-medium text-gray-700">Genres:</label>
-                <div class="checkbox-container">
-                    <div th:each="genre : ${genres}">
-                        <label>
-                            <input type="checkbox" name="genres" th:value="${genre.id}" th:checked="${book.genres.contains(genre)}" />
-                            <span th:text="${genre.name}">Genre Name</span>
-                        </label>
-                    </div>
-                </div>
-            </div>
-            <div class="text-center">
-                <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Update Book</button>
-            </div>
-        </form>
+          </div>
+        </div>
+        <div class="text-center">
+          <button
+            type="submit"
+            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            th:text="#{form.button.submit}"
+          >
+            Update Book
+          </button>
+        </div>
+      </form>
     </div>
     <script>
-        document.getElementById("add-author-button").addEventListener("click", function () {
-            const authorSection = document.getElementById("author-section");
-            const newAuthorInput = document.createElement("input");
-            newAuthorInput.type = "text";
-            newAuthorInput.name = "authors";
-            newAuthorInput.required = true;
-            newAuthorInput.classList.add(
-                "mt-1",
-                "block",
-                "w-full",
-                "px-3",
-                "py-2",
-                "border",
-                "border-gray-300",
-                "rounded-md",
-                "shadow-sm",
-                "focus:outline-none",
-                "focus:ring-indigo-500",
-                "focus:border-indigo-500"
-            );
-            authorSection.appendChild(newAuthorInput);
+      document
+        .getElementById("add-author-button")
+        .addEventListener("click", function () {
+          const authorSection = document.getElementById("author-section");
+          const newAuthorInput = document.createElement("input");
+          newAuthorInput.type = "text";
+          newAuthorInput.name = "authors";
+          newAuthorInput.required = true;
+          newAuthorInput.classList.add(
+            "mt-1",
+            "block",
+            "w-full",
+            "px-3",
+            "py-2",
+            "border",
+            "border-gray-300",
+            "rounded-md",
+            "shadow-sm",
+            "focus:outline-none",
+            "focus:ring-indigo-500",
+            "focus:border-indigo-500"
+          );
+          authorSection.appendChild(newAuthorInput);
         });
     </script>
-</body>
+  </body>
 </html>

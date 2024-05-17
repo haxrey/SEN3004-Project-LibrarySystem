@@ -1,69 +1,131 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Books Records</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+<html lang="ar" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title th:text="#{books.records}">Books Records</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
     <style>
-        .wavy-background {
-            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%"><path fill="%23007BFF" fill-opacity="0.1" d="M0 0c0 0 216 214 432 214s432-214 432-214 216 214 432 214 432-214 432-214v768H0z"/></svg>');
-            background-size: cover;
-        }
+      .wavy-background {
+        background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%"><path fill="%23007BFF" fill-opacity="0.1" d="M0 0c0 0 216 214 432 214s432-214 432-214 216 214 432 214 432-214 432-214v768H0z"/></svg>');
+        background-size: cover;
+      }
+      body.rtl {
+        direction: rtl;
+      }
     </style>
-</head>
-<body class="bg-gray-100 wavy-background ">
+  </head>
+  <body
+    class="bg-gray-100 wavy-background"
+    th:classappend="${#locale.language == 'ar'} ? 'rtl' : ''"
+  >
     <div class="container mx-auto mt-10">
-        <div class="flex justify-between items-center mb-6">
-            <h1 class="text-2xl font-bold">Books Records</h1>
-            <a href="/form" class="flex items-center bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l-2-2m2 2h8m-6 2a9 9 0 11-6-15.659M10 14l6-6m0 0l-6-6M10 2h4"></path>
-                </svg>
-                Add Books
-            </a>
-        </div>
-        <table class="min-w-full table-auto bg-white rounded-lg overflow-hidden">
-            <thead class="bg-gray-200 text-gray-600">
-                <tr>
-                    <th class="px-4 py-2">View</th>
-                    <th class="px-4 py-2">Book Title</th>
-                    <th class="px-4 py-2">Authors</th>
-                    <th class="px-4 py-2">ISBN</th>
-                    <th class="px-4 py-2">Publication Date</th>
-                    <th class="px-4 py-2">Purchase Date</th>
-                    <th class="px-4 py-2">Price</th>
-                    <th class="px-4 py-2">Genres</th>
-                    <th class="px-4 py-2">Actions</th>
-                </tr>
-            </thead>
-            <tbody th:each="book : ${books}" class="text-gray-700">
-                <tr>
-                    <td class="border px-4 py-2">
-                        <a th:href="@{/view(bookId=${book.id})}" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-1 px-2 rounded focus:outline-none focus:shadow-outline">View</a>
-                    </td>
-                    <td class="border px-4 py-2" th:text="${book.title}">Sample Book Title</td>
-                    <td class="border px-4 py-2">
-                        <ul>
-                            <li th:each="author : ${book.authors}" th:text="${author.name}"></li>
-                        </ul>
-                    </td>
-                    <td class="border px-4 py-2" th:text="${book.isbn}">1234567890123</td>
-                    <td class="border px-4 py-2" th:text="${#temporals.format(book.publicationDate, 'yyyy-MM-dd')}">2021-07-01</td>
-                    <td class="border px-4 py-2" th:text="${#temporals.format(book.purchaseDate, 'yyyy-MM-dd')}">2024-05-15</td>
-                    <td class="border px-4 py-2" th:text="${book.price}">20.00</td>
-                    <td class="border px-4 py-2">
-                        <ul>
-                            <li th:each="genre : ${book.genres}" th:text="${genre.name}"></li>
-                        </ul>
-                    </td>
-                    <td class="border px-4 py-2">
-                        <a th:href="@{/edit(bookId=${book.id})}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded focus:outline-none focus:shadow-outline">Edit</a>
-                        <a th:href="@{/delete(bookId=${book.id})}" class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded focus:outline-none focus:shadow-outline">Delete</a>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+      <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-bold" th:text="#{books.records}">
+          Books Records
+        </h1>
+        <a
+          th:href="@{/form(lang=${#locale.language})}"
+          class="flex items-center bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+        >
+          <svg
+            class="w-4 h-4 mr-2"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M10 14l2-2m0 0l-2-2m2 2h8m-6 2a9 9 0 11-6-15.659M10 14l6-6m0 0ل-6-6M10 2h4"
+            ></path>
+          </svg>
+          <span th:text="#{add.books}">Add Books</span>
+        </a>
+      </div>
+      <table class="min-w-full table-auto bg-white rounded-lg overflow-hidden">
+        <thead class="bg-gray-200 text-gray-600">
+          <tr>
+            <th class="px-4 py-2" th:text="#{view}">View</th>
+            <th class="px-4 py-2" th:text="#{book.title}">Book Title</th>
+            <th class="px-4 py-2" th:text="#{authors}">Authors</th>
+            <th class="px-4 py-2" th:text="#{isbn}">ISBN</th>
+            <th class="px-4 py-2" th:text="#{publication.date}">
+              Publication Date
+            </th>
+            <th class="px-4 py-2" th:text="#{purchase.date}">Purchase Date</th>
+            <th class="px-4 py-2" th:text="#{price}">Price</th>
+            <th class="px-4 py-2" th:text="#{genres}">Genres</th>
+            <th class="px-4 py-2" th:text="#{actions}">Actions</th>
+          </tr>
+        </thead>
+        <tbody th:each="book : ${books}" class="text-gray-700">
+          <tr>
+            <td class="border px-4 py-2">
+              <a
+                th:href="@{/view(bookId=${book.id}, lang=${#locale.language})}"
+                class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-1 px-2 rounded focus:outline-none focus:shadow-outline"
+                th:text="#{view}"
+                >View</a
+              >
+            </td>
+            <td class="border px-4 py-2" th:text="${book.title}">
+              Sample Book Title
+            </td>
+            <td class="border px-4 py-2">
+              <ul>
+                <li
+                  th:each="author : ${book.authors}"
+                  th:text="${author.name}"
+                ></li>
+              </ul>
+            </td>
+            <td class="border px-4 py-2" th:text="${book.isbn}">
+              1234567890123
+            </td>
+            <td
+              class="border px-4 py-2"
+              th:text="${#temporals.format(book.publicationDate, 'yyyy-MM-dd')}"
+            >
+              2021-07-01
+            </td>
+            <td
+              class="border px-4 py-2"
+              th:text="${#temporals.format(book.purchaseDate, 'yyyy-MM-dd')}"
+            >
+              2024-05-15
+            </td>
+            <td class="border px-4 py-2" th:text="${book.price}">20.00</td>
+            <td class="border px-4 py-2">
+              <ul>
+                <li
+                  th:each="genre : ${book.genres}"
+                  th:text="${genre.name}"
+                ></li>
+              </ul>
+            </td>
+            <td class="border px-4 py-2">
+              <a
+                th:href="@{/edit(bookId=${book.id}, lang=${#locale.language})}"
+                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded focus:outline-none focus:shadow-outline"
+                th:text="#{edit}"
+                >Edit</a
+              >
+              <a
+                th:href="@{/delete(bookId=${book.id}, lang=${#locale.language})}"
+                class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded focus:outline-none focus:shadow-outline"
+                th:text="#{delete}"
+                >Delete</a
+              >
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
-</body>
+  </body>
 </html>
