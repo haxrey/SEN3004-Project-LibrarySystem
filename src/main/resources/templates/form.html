@@ -1,266 +1,157 @@
 <!DOCTYPE html>
-<!-- correser tone -->
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title th:text="#{form.title}">Library Management System - Add Book</title>
-    <link
-      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
-      rel="stylesheet"
-    />
-    <style>
-      .wavy-background {
-        background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%"><path fill="%23007BFF" fill-opacity="0.1" d="M0 0c0 0 216 214 432 214s432-214 432-214 216 214 432 214 432-214 432-214v768H0z"/></svg>');
-        background-size: cover;
-      }
-      .center-button {
-        display: flex;
-        justify-content: center;
-      }
-      .input-group {
-        display: flex;
-        gap: 1rem;
-      }
-      .input-group div {
-        flex: 1;
-      }
-      body.rtl {
-        direction: rtl;
-      }
-    </style>
-  </head>
-  <body
-    class="wavy-background bg-gray-100 flex items-center justify-center h-screen"
-    th:classappend="${#locale.language == 'ar'} ? 'rtl' : ''"
-  >
-    <div
-      class="w-full max-w-md p-5 mx-auto bg-white rounded-lg shadow-xl mt-16"
-    >
-      <div class="flex justify-between items-center mb-6">
-        <div class="relative">
-          <select
-            id="language-selector"
-            class="bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-            onchange="changeLanguage(this.value)"
-          >
-            <option
-              value="en"
-              th:text="#{language.english}"
-              th:selected="${#locale.language == 'en'}"
-            >
-              English
-            </option>
-            <option
-              value="ar"
-              th:text="#{language.arabic}"
-              th:selected="${#locale.language == 'ar'}"
-            >
-              Arabic
-            </option>
-            <option
-              value="tr"
-              th:text="#{language.turkish}"
-              th:selected="${#locale.language == 'tr'}"
-            >
-              Turkish
-            </option>
-          </select>
-        </div>
-        <!-- <a
-          href="/results"
-          class="flex items-center bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-        >
-          <svg
-            class="w-4 h-4 mr-2"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M10 14l2-2m0 0l-2-2m2 2h8m-6 2a9 9 0 11-6-15.659M10 14l6-6m0 0l-6-6M10 2h4"
-            ></path>
-          </svg>
-          <span th:text="#{form.link.viewLibrary}">View Library</span>
-        </a> -->
-
-        <a
-          th:href="@{/results(lang=${#locale.language})}"
-          class="flex items-center bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-        >
-          <svg
-            class="w-4 h-4 mr-2"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M10 14l2-2m0 0l-2-2m2 2h8m-6 2a9 9 0 11-6-15.659M10 14l6-6m0 0l-6-6M10 2h4"
-            ></path>
-          </svg>
-          <span th:text="#{form.link.viewLibrary}">View Library</span>
-        </a>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title th:text="#{form.title}">Library Management System - Add Book</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+  <style>
+    .wavy-background {
+      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%"><path fill="%23007BFF" fill-opacity="0.1" d="M0 0c0 0 216 214 432 214s432-214 432-214 216 214 432 214 432-214 432-214v768H0z"/></svg>');
+      background-size: cover;
+    }
+    .center-button {
+      display: flex;
+      justify-content: center;
+    }
+    .input-group {
+      display: flex;
+      gap: 1rem;
+    }
+    .input-group div {
+      flex: 1;
+    }
+    body.rtl {
+      direction: rtl;
+    }
+    .author-group {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .remove-author-button {
+      background-color: red;
+      color: white;
+      font-weight: bold;
+      padding: 0.25rem 0.5rem;
+      border-radius: 0.25rem;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body class="wavy-background bg-gray-100 flex items-center justify-center h-screen" th:classappend="${#locale.language == 'ar'} ? 'rtl' : ''">
+  <div class="w-full max-w-md p-5 mx-auto bg-white rounded-lg shadow-xl mt-16">
+    <div class="flex justify-between items-center mb-6">
+      <div class="relative">
+        <select id="language-selector" class="bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" onchange="changeLanguage(this.value)">
+          <option value="en" th:text="#{language.english}" th:selected="${#locale.language == 'en'}">English</option>
+          <option value="ar" th:text="#{language.arabic}" th:selected="${#locale.language == 'ar'}">Arabic</option>
+          <option value="tr" th:text="#{language.turkish}" th:selected="${#locale.language == 'tr'}">Turkish</option>
+        </select>
       </div>
-      <h1 class="text-lg font-bold text-center mb-4" th:text="#{form.title}">
-        Add New Book
-      </h1>
-      <form action="/submit-book" method="POST" class="space-y-4">
-        <div>
-          <label
-            for="title"
-            class="block text-sm font-medium text-gray-700"
-            th:text="#{form.label.title}"
-            >Title:</label
-          >
-          <input
-            type="text"
-            id="title"
-            name="title"
-            required
-            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-          />
-        </div>
-        <div id="author-section">
-          <label
-            for="author-0"
-            class="block text-sm font-medium text-gray-700"
-            th:text="#{form.label.author}"
-            >Author:</label
-          >
-          <input
-            type="text"
-            id="author-0"
-            name="authors"
-            required
-            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-          />
-        </div>
-        <div class="center-button">
-          <button
-            type="button"
-            id="add-author-button"
-            class="mt-2 bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-2 rounded focus:outline-none focus:shadow-outline"
-          >
-            <span th:text="#{form.label.addAuthor}">Add Another Author</span>
-          </button>
-        </div>
-        <div class="input-group">
-          <div>
-            <label
-              for="publishDate"
-              class="block text-sm font-medium text-gray-700"
-              th:text="#{form.label.publishDate}"
-              >Publish Date:</label
-            >
-            <input
-              type="date"
-              id="publishDate"
-              name="publishDate"
-              required
-              class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-            />
-          </div>
-          <div>
-            <label
-              for="purchaseDate"
-              class="block text-sm font-medium text-gray-700"
-              th:text="#{form.label.purchaseDate}"
-              >Purchase Date:</label
-            >
-            <input
-              type="date"
-              id="purchaseDate"
-              name="purchaseDate"
-              required
-              class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-            />
-          </div>
-        </div>
-        <div class="input-group">
-          <div>
-            <label
-              for="isbn"
-              class="block text-sm font-medium text-gray-700"
-              th:text="#{form.label.isbn}"
-              >ISBN:</label
-            >
-            <input
-              type="text"
-              id="isbn"
-              name="isbn"
-              pattern="\d{13}"
-              title="Enter a 13-digit ISBN number"
-              required
-              class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-            />
-          </div>
-          <div>
-            <label
-              for="price"
-              class="block text-sm font-medium text-gray-700"
-              th:text="#{form.label.price}"
-              >Price:</label
-            >
-            <input
-              type="number"
-              id="price"
-              name="price"
-              step="0.01"
-              required
-              class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-            />
-          </div>
-        </div>
-        <div>
-          <label
-            for="genres"
-            class="block text-sm font-medium text-gray-700"
-            th:text="#{form.label.genres}"
-            >Genres:</label
-          >
-          <select
-            id="genres"
-            name="genres"
-            multiple
-            required
-            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-          >
-            <option
-              th:each="genre : ${genres}"
-              th:value="${genre.id}"
-              th:text="${genre.name}"
-            ></option>
-          </select>
-        </div>
-        <button
-          type="submit"
-          class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-        >
-          <span th:text="#{form.button.submit}">Add Book</span>
-        </button>
-      </form>
+      <a th:href="@{/results(lang=${#locale.language})}" class="flex items-center bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l-2-2m2 2h8m-6 2a9 9 0 11-6-15.659M10 14l6-6m0 0l-6-6M10 2h4"></path>
+        </svg>
+        <span th:text="#{form.link.viewLibrary}">View Library</span>
+      </a>
     </div>
-    <script>
-      function changeLanguage(lang) {
-        const urlParams = new URLSearchParams(window.location.search);
-        urlParams.set("lang", lang);
-        window.location.search = urlParams.toString();
-      }
+    <h1 class="text-lg font-bold text-center mb-4" th:text="#{form.title}">Add New Book</h1>
+    <form action="/submit-book" method="POST" class="space-y-4">
+      <div>
+        <label for="title" class="block text-sm font-medium text-gray-700" th:text="#{form.label.title}">Title:</label>
+        <input type="text" id="title" name="title" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" />
+      </div>
+      <div id="author-section">
+        <div class="author-group">
+          <input type="text" id="author-0" name="authors" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" />
+        </div>
+      </div>
+      <div class="center-button">
+        <button type="button" id="add-author-button" class="mt-2 bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-2 rounded focus:outline-none focus:shadow-outline">
+          <span th:text="#{form.label.addAuthor}">Add Another Author</span>
+        </button>
+      </div>
+      <div class="input-group">
+        <div>
+          <label for="publishDate" class="block text-sm font-medium text-gray-700" th:text="#{form.label.publishDate}">Publish Date:</label>
+          <input type="date" id="publishDate" name="publishDate" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" />
+        </div>
+        <div>
+          <label for="purchaseDate" class="block text-sm font-medium text-gray-700" th:text="#{form.label.purchaseDate}">Purchase Date:</label>
+          <input type="date" id="purchaseDate" name="purchaseDate" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" />
+        </div>
+      </div>
+      <div class="input-group">
+        <div>
+          <label for="isbn" class="block text-sm font-medium text-gray-700" th:text="#{form.label.isbn}">ISBN:</label>
+          <input type="text" id="isbn" name="isbn" pattern="\d{13}" title="Enter a 13-digit ISBN number" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" />
+        </div>
+        <div>
+          <label for="price" class="block text-sm font-medium text-gray-700" th:text="#{form.label.price}">Price:</label>
+          <input type="number" id="price" name="price" step="0.01" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" />
+        </div>
+      </div>
+      <div>
+        <label for="genres" class="block text-sm font-medium text-gray-700" th:text="#{form.label.genres}">Genres:</label>
+        <select id="genres" name="genres" multiple required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+          <option th:each="genre : ${genres}" th:value="${genre.id}" th:text="${genre.name}"></option>
+        </select>
+      </div>
+      <button type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+        <span th:text="#{form.button.submitAdd}">Add Book</span>
+      </button>
+    </form>
+  </div>
+  <script>
+    function changeLanguage(lang) {
+      const urlParams = new URLSearchParams(window.location.search);
+      urlParams.set("lang", lang);
+      window.location.search = urlParams.toString();
+    }
 
-      document
-        .getElementById("language-selector")
-        .addEventListener("change", function () {
-          const selectedLang = this.value;
-          document.body.classList.toggle("rtl", selectedLang === "ar");
-        });
-    </script>
-  </body>
+    document.getElementById("language-selector").addEventListener("change", function () {
+      const selectedLang = this.value;
+      document.body.classList.toggle("rtl", selectedLang === "ar");
+    });
+
+    let authorIndex = 1;
+    document.getElementById("add-author-button").addEventListener("click", function () {
+      const authorSection = document.getElementById("author-section");
+      const authorGroup = document.createElement("div");
+      authorGroup.className = "author-group";
+      const newAuthorInput = document.createElement("input");
+      newAuthorInput.type = "text";
+      newAuthorInput.id = `author-${authorIndex}`;
+      newAuthorInput.name = "authors";
+      newAuthorInput.required = true;
+      newAuthorInput.className = "mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500";
+      const removeButton = document.createElement("button");
+      removeButton.type = "button";
+      removeButton.className = "remove-author-button";
+      removeButton.innerText = "X";
+      removeButton.onclick = function () {
+        authorGroup.remove();
+        toggleRemoveButtons();
+      };
+      authorGroup.appendChild(newAuthorInput);
+      authorGroup.appendChild(removeButton);
+      authorSection.appendChild(authorGroup);
+      authorIndex++;
+      toggleRemoveButtons();
+    });
+
+    function toggleRemoveButtons() {
+      const authorGroups = document.querySelectorAll('.author-group');
+      const removeButtons = document.querySelectorAll('.remove-author-button');
+      if (authorGroups.length > 1) {
+        removeButtons.forEach(button => button.style.display = 'block');
+      } else {
+        removeButtons.forEach(button => button.style.display = 'none');
+      }
+    }
+
+    toggleRemoveButtons();
+  </script>
+</body>
 </html>

@@ -1,4 +1,3 @@
--- src/main/resources/sql/data.sql
 
 -- Insert sample genres
 INSERT INTO genres (name) VALUES ('Science Fiction');
